@@ -1,47 +1,42 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fatchAllTodo } from "./blogApi";
+import { getAllBlogs } from "./blogApi";
 
 //That is the initial state of your data;
 const initialState = {
-  blogs: [
-    {
-      id: 1,
-      heading: "react redux",
-      content: {
-        data: "redux is a state management tool",
-      },
-    },
-  ],
+  blogs: [],
+  status:'loading',
+  error:null
 };
 
 // Requesting to fatch all data form backend using fatchAlltodo
-export const fatchAllTodoAsync = createAsyncThunk(
-  "blogs/fetchAllTodo",
+export const getAllBlogsAsync = createAsyncThunk(
+  "blogs/getAllBlogs",
   async () => {
-    const response = await fatchAllTodo();
+    const response = await getAllBlogs();
     return response.data;
   }
 );
 
+
+// creating a slice for adding objects in blogs array 
 export const blogSlice = createSlice({
   name: "blog",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fatchAllTodoAsync.pending, (state) => {
+      .addCase(getAllBlogsAsync.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fatchAllTodoAsync.rejected, (state) => {
+      .addCase(getAllBlogsAsync.rejected, (state) => {
         state.status = "reject";
-        
       })
-      .addCase(fatchAllTodoAsync.fulfilled, (state, action) => {
+      .addCase(getAllBlogsAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.value += action.payload;
       });
   },
 });
 
-// export const { } = blogSlice.actions;
+
 export default blogSlice.reducer;

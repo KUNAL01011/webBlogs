@@ -1,5 +1,5 @@
 import "./App.css";
-import CreateBlog from "./pages/CreateBlog";
+import CreateBlog from "./pages/createBlogPage/CreateBlog";
 
 function App() {
   return (

@@ -1,1 +1,1 @@
-export const DB_NAME = 'crud'
+export const DB_NAME = 'webBlog'
