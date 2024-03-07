@@ -1,0 +1,52 @@
+# Node.js
+node_modules/
+
+# Build folders
+build/
+dist/
+.next/
+
+# Environment variables
+.env*
+
+# IDE and editor specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+
+# Temporary files
+.tmp/
+
+# Thumbs
+thumbs.db
+
+# OS specific
+.DS_Store
+
+# Text editor backups
+*.swp
+
+# Database files (adjust based on your database)
+db.sqlite
+# For MongoDB, add specific files or folders as needed
+# Based on your setup, it might be 
+# data/ or
+# mongodb/
+
+# Secret files
+.env.local
+.env.development
+.env.production
+
+# Yarn specific
+yarn.lock
+
+# Npm specific
+package-lock.json
