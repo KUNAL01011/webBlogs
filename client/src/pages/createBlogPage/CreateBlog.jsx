@@ -5,15 +5,13 @@ import "./createBlog.css";
 import "react-quill/dist/quill.snow.css"; // Include CSS for rich text editor
 
 const CreateBlog = () => {
-  const [blog, setBlog] = useState({}); // full blog state
   const [title, setTitle] = useState(""); // title of blog
   const [summary, setSummary] = useState(""); // summary of blog
   const [mainImage, setMainImage] = useState(null); // main Image of blog
   const [content, setContent] = useState(""); // Initialize content as an empty string
   const [conclusion, setConclusion] = useState(""); // set the conclusion of blog
 
-
-  // set the data into set State 
+  // set the data into set State
   const handleChange = (event) => {
     const { name, value, files } = event.target;
 
@@ -28,45 +26,43 @@ const CreateBlog = () => {
     }
   };
 
-  // Set the content of the content data 
+  // Set the content of the content data
   const handleContentChange = (value) => {
     setContent(value);
   };
 
-  // Sending all data to backend when i click on submit button 
+  // Sending all data to backend when i click on submit button
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("clicked");
     try {
       if (!title && !summary && !mainImage && !content && !conclusion) {
         console.log("We don't get data here ");
       }
-      setBlog({
-        title,
-        summary,
-        mainImage,
-        content,
-        conclusion,
-      });
-
-      if (!blog) {
-        console.log("We can't unable to set blog in ");
-      }
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("summary", summary);
+      formData.append("content", content);
+      formData.append("conclusion", conclusion);
+      formData.append("mainImage", mainImage); // Assuming mainImage is a File object
 
       const response = await axios.post(
         "http://localhost:8000/api/v1/blog/add-blog",
-        blog
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
-      const form = event.target.form;
-      if (response.status === 200 || response.data.success) {
-        form.reset();
+      
+      if (response.status === 201 || response.data.success) {
         setTitle("");
         setSummary("");
         setMainImage(null);
         setContent("");
         setConclusion("");
+        // document.getElementById("mainImage").value = "";
       }
-      setBlog({});
     } catch (error) {
       console.error("Error adding Blog:", error);
     }
@@ -105,7 +101,6 @@ const CreateBlog = () => {
           onChange={handleChange}
           required
         />
-
         <label htmlFor="summary">Summary:</label>
         <textarea
           id="summary"
@@ -114,7 +109,6 @@ const CreateBlog = () => {
           onChange={handleChange}
           required
         />
-
         <label htmlFor="mainImage">Main Image:</label>
         <input
           type="file"
@@ -135,15 +129,12 @@ const CreateBlog = () => {
             onChange={handleContentChange}
           />
         </div>
-
         <label htmlFor="conclusion">Conclusion:</label>
         <textarea
           id="conclusion"
           name="conclusion"
           value={conclusion}
           onChange={handleChange}
-          // Placeholder for a conclusion field
-          // ...
         />
         <div className="btn-wrapper">
           <button type="submit" className="btn">
