@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createBlog } from "../controllers/blog.controller.js";
+import { createBlog,getBlogs } from "../controllers/blog.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 //creating router using Router() of express js
@@ -15,7 +15,8 @@ router.route("/add-blog").post(
     }
   ]),
   createBlog
-)
+);
+router.route("/get-blog").get(getBlogs);
 
 
 export default router;

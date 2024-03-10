@@ -1,0 +1,50 @@
+.header {
+    height: 8rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 5rem;
+}
+
+.logo-text {
+    font-size: 2.5rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+.right{
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+}
+.route {
+    font-size: 2rem;
+    font-weight: 600;
+}
+.pro-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:  2rem;
+}
+.lg-btn {
+    font-size: 2rem;
+    padding: 0.5rem 2rem;
+    border-radius: 2rem;
+    cursor: pointer;
+}
+span {
+    cursor: pointer;
+}
+
+.profile{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+}

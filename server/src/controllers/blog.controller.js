@@ -49,7 +49,21 @@ const createBlog = asyncHandler( async (req,res) => {
     )
 })
 
-
+//This controller create for give all blogs to front-end
+const getBlogs = asyncHandler( async (req, res) => {
+    try {
+        const response = await Blog.find();
+        if(!response){
+          throw new ApiError(500, "we did't get response to backend");
+        }
+    
+        return res.status(200).json(
+          new ApiResponse(200, response,"Successfull fetched all data")
+        );
+      } catch (error) {
+        throw new ApiError(500,"Something went wrong while fetching all task");
+      }
+})
 
 //exporting the controllers
-export {createBlog};
+export {createBlog,getBlogs};

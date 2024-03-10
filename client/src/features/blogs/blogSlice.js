@@ -4,8 +4,7 @@ import { getAllBlogs } from "./blogApi";
 //That is the initial state of your data;
 const initialState = {
   blogs: [],
-  status:'loading',
-  error:null
+  status:'',
 };
 
 // Requesting to fatch all data form backend using fatchAlltodo
@@ -33,10 +32,10 @@ export const blogSlice = createSlice({
       })
       .addCase(getAllBlogsAsync.fulfilled, (state, action) => {
         state.status = "idle";
-        state.value += action.payload;
+        state.blogs = action.payload;
       });
   },
 });
 
-
+export const getData = (state) => state.blogs;
 export default blogSlice.reducer;
