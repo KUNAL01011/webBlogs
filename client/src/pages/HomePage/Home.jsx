@@ -1,23 +1,19 @@
-import Header from "../../components/header/Header";
 import Card from "../../components/card/Card";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllBlogsAsync, getData } from "../../features/blogs/blogSlice";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { getData } from "../../features/blogs/blogSlice";
 import "./home.css";
+import { Link } from "react-router-dom";
 
 const Home = () => {
-  const dispatch = useDispatch();
   const data = useSelector(getData);
 
-  useEffect(() => {
-    dispatch(getAllBlogsAsync());
-  }, [dispatch]);
   return (
     <div className="home">
-      <Header></Header>
       <div className="main">
         {data.map((blog) => (
-          <Card key={blog._id} blog={blog}></Card>
+          <Link key={blog._id} to={`/blog/${blog._id}`}>
+            <Card blog={blog}></Card>
+          </Link>
         ))}
       </div>
     </div>

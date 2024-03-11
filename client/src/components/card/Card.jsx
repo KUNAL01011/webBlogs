@@ -17,7 +17,7 @@ const Card = (data) => {
       </div>
       <div className="card__body">
         <h4>{data.blog.title}</h4>
-        <p>{parse(data.blog.content)}</p>
+        <p>{parse(data.blog.summary)}</p>
       </div>
       <div className="card__footer">
         <div className="user">

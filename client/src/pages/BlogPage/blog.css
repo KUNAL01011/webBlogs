@@ -1,16 +1,13 @@
-.home {
-    overflow-x: hidden;
-}
-
-.main{
+.blog{
+    width: 80%;
     margin: auto;
     margin-top: 8rem;
     padding-top: 8rem;
-    /* background-color: black; */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 4rem;
     flex-wrap: wrap;
     margin-bottom: 20rem;
+    flex-direction: column;
 }
