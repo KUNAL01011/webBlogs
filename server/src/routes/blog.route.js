@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createBlog,getBlogs } from "../controllers/blog.controller.js";
+import { createBlog,getBlogs,deleteBlog } from "../controllers/blog.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 //creating router using Router() of express js
@@ -17,6 +17,7 @@ router.route("/add-blog").post(
   createBlog
 );
 router.route("/get-blog").get(getBlogs);
+router.route('/delete-blog/:id').delete(deleteBlog)
 
 
 export default router;

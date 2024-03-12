@@ -20,7 +20,10 @@ const blogSchema = new Schema({
     conclusion: {
         type: String,
         required: true
+    },
+    imageCloudId: {
+        type: String
     }
-})
+}, {timestamps:true});
 
 export const Blog = mongoose.model("Blog", blogSchema);

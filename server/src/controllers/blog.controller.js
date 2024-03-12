@@ -3,7 +3,7 @@ import {ApiError} from '../utils/ApiError.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {uploadOnCloudinary} from '../utils/cloudinary.js';
 import {asyncHandler} from '../utils/asyncHandler.js';
-
+import {v2 as cloudinary } from 'cloudinary';
 
 //This controller create for adding a blog into the database
 const createBlog = asyncHandler( async (req,res) => {
@@ -22,6 +22,7 @@ const createBlog = asyncHandler( async (req,res) => {
 
     //Image upload on cloudinary 
     const mainImage = await uploadOnCloudinary(mainImagePath);
+    // console.log(mainImage);
 
     if(!mainImage){
         throw new ApiError(400, "main Image is required");
@@ -33,7 +34,8 @@ const createBlog = asyncHandler( async (req,res) => {
         mainImage: mainImage.url,
         summary,
         content,
-        conclusion
+        conclusion,
+        imageCloudId: mainImage.public_id
     });
 
     //checking entry created or not
@@ -65,5 +67,59 @@ const getBlogs = asyncHandler( async (req, res) => {
       }
 })
 
+
+//This controller for delelting the blog 
+// const deleteBlog = asyncHandler( async (req, res) => {
+//     const taskId = req.params.id;
+//     if(!taskId) {
+//       return res.status(400).json({ message: "Missing required field: taskContent" });
+//     }
+//     try{
+//       const deleteblog = await Blog.findByIdAndDelete(taskId);
+//       res.status(200).json({ message: "Task successfully updated", data: deleteblog });
+      
+//     } catch(error){
+//       return res.status(500).json({ message: "Internal server error" });
+//     }
+// })
+const deleteBlog = asyncHandler(async (req, res) => {
+  const taskId = req.params.id;
+  if (!taskId) {
+      return res.status(400).json({ message: "Missing required field: taskContent" });
+  }
+  try {
+      // Find the blog by ID
+      const blog = await Blog.findById(taskId);
+      
+      if (!blog) {
+          return res.status(404).json({ message: "Blog not found" });
+      }
+      
+      // Delete the associated image from Cloudinary
+      console.log(blog.imageCloudId)
+      if (!blog.imageCloudId) {
+          // Assuming you have the Cloudinary SDK installed and configured
+          console.log("we can't find the id ");
+      }
+      else{
+        await cloudinary.uploader.destroy(blog.imageCloudId);
+      }
+      
+      // Delete the blog from the database
+      const deletedBlog = await Blog.findByIdAndDelete(taskId);
+      
+      res.status(200).json({ message: "Blog successfully deleted", data: deletedBlog });
+
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+// This controller for updateing the blog 
+const updateBlog = asyncHandler( async (req, res) => {
+
+})
 //exporting the controllers
-export {createBlog,getBlogs};
+export {createBlog,getBlogs,deleteBlog};
