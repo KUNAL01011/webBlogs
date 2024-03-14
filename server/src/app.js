@@ -1,29 +1,33 @@
-import express from 'express';
-import cors from 'cors'
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 //routes import
-import blogRouter from './routes/blog.route.js';
+import blogRouter from "./routes/blog.route.js";
+import userRouter from "./routes/user.route.js";
 
 const app = express();
 
-//That accept the req form the frontend
-app.use(cors({
-    origin : process.env.CORS_ORIGIN,
-    credentials: true
-}))
 
-//That allow to accept the json data from the frontend
+
+// middlewares that can allow me to do something 
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  })
+);
 app.use(express.json());
-
-// static file ko serve kar payege
 app.use(express.static("public"));
+app.use(express.urlencoded());
+app.use(cookieParser());
+
+
 
 
 
 //routes declaration
-app.use('/api/v1/blog',blogRouter);
+app.use("/api/v1/blog", blogRouter);
+app.use("/api/v1/user", userRouter);
 
-
-
-
-export {app};
+export { app };
