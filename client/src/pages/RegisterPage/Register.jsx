@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import './register.css';
+import { useState } from "react";
+import axios from "axios";
+import "./register.css";
+import { Navigate } from "react-router-dom";
 
 function Register() {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [logoImg, setLogoImg] = useState('');
-  const [previewLogo, setPreviewLogo] = useState('');
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleFullNameChange = (event) => {
     setFullName(event.target.value);
@@ -20,26 +20,23 @@ function Register() {
     setPassword(event.target.value);
   };
 
-  const handleLogoImgChange = (event) => {
-    const imageFile = event.target.files[0];
-    setLogoImg(imageFile);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewLogo(reader.result);
-    };
-    reader.readAsDataURL(imageFile);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Send data to API
     const userData = {
       fullName: fullName,
       email: email,
       password: password,
-      logoImg: logoImg
     };
-    console.log(userData); // For demonstration, you can replace this with your API call
+
+    if (userData) {
+      await axios.post("http://localhost:8000/api/v1/user/register", userData);
+      setFullName("");
+      setEmail("");
+      setPassword("");
+      Navigate("/otp", { replace: true });
+    } else {
+      console.log("all filed are required");
+    }
   };
 
   return (
@@ -47,7 +44,6 @@ function Register() {
       <form onSubmit={handleSubmit} className="register-form">
         <h2>Register</h2>
         <div className="form-group">
-          <label>Full Name</label>
           <input
             type="text"
             placeholder="Enter full name"
@@ -57,7 +53,6 @@ function Register() {
           />
         </div>
         <div className="form-group">
-          <label>Email</label>
           <input
             type="email"
             placeholder="Enter email"
@@ -67,7 +62,6 @@ function Register() {
           />
         </div>
         <div className="form-group">
-          <label>Password</label>
           <input
             type="password"
             placeholder="Enter password"
@@ -76,20 +70,6 @@ function Register() {
             required
           />
         </div>
-        <div className="form-group">
-          <label>Logo Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleLogoImgChange}
-            required
-          />
-        </div>
-        {previewLogo && (
-          <div className="logo-preview">
-            <img src={previewLogo} alt="Logo Preview" />
-          </div>
-        )}
         <button type="submit">Register</button>
       </form>
     </div>
