@@ -1,57 +1,108 @@
-.header {
-    height: 8rem;
-    position: fixed;
+.top {
+    width: 100%;
+    height: 3.125rem;
+    background-color: white;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
-    background-color: aqua;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0px 5rem;
-}
-
-.logo-text {
-    font-size: 2.5rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-.right{
+    z-index: 999;
+    font-family: "Josefin Sans", sans-serif;
+  }
+  
+  .topLeft,
+  .topRight {
+    flex: 3;
     display: flex;
-    flex-direction: row;
-    gap: 3rem;
+    align-items: center;
     justify-content: center;
-    align-items: center;
-}
-.route {
-    font-size: 2rem;
-    font-weight: 600;
-}
-.pro-sec {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap:  2rem;
-}
-.lg-btn {
-    font-size: 2rem;
-    padding: 0.5rem 2rem;
-    border-radius: 2rem;
-    cursor: pointer;
-}
-span {
-    cursor: pointer;
-}
-
-.profile{
-    width: 5rem;
-    height: 5rem;
-    border-radius: 50%;
-}
-
-.col {
-    color: red;
-}
-.normal{
+  }
+  .black {
     color: black;
-}
+  }
+  .col {
+    color: orangered;
+  }
+  .link {
+    color: black;
+  }
+
+  .customMenu {
+    flex: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: none;
+  }
+
+  .topLeft img {
+    height : 4rem;
+  }
+  
+  .topIcon {
+    font-size: 1.25rem;
+    margin-right: 10px;
+    color: #444;
+    cursor: pointer;
+  }
+  
+  .topCenter {
+    flex: 6;
+  }
+  
+  .topList {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .topListItem {
+    margin-right: 20px;
+    font-size: 1.125rem;
+    font-weight: 300;
+    cursor: pointer;
+  }
+  
+  .topListItem:hover{
+      color: gray;
+  }
+  
+  .topImg {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    cursor: pointer;
+  }
+  
+  .topSearchIcon {
+    font-size: 1.125rem;
+    color: #666;
+    cursor: pointer;
+  }
+
+  @media (max-width: 1020px) {
+    .topCenter {
+      flex: 4;
+    }
+  }
+
+  @media (max-width: 768px){
+    .topCenter{
+      display: none;
+    }
+    .topRight {
+      display: none;
+    }
+    .customMenu {
+      display: flex;
+      justify-content: end;
+      padding-right: 3rem;
+    }
+    .topLeft {
+      justify-content: start;
+    }
+  }

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import ejs from 'ejs';
 
 //routes import
 import blogRouter from "./routes/blog.route.js";
@@ -19,8 +20,8 @@ app.use(
 );
 app.use(express.json());
 app.use(express.static("public"));
-app.use(express.urlencoded());
 app.use(cookieParser());
+app.engine("ejs", ejs.renderFile);
 
 
 

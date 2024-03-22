@@ -11,6 +11,9 @@ import Blog from './pages/BlogPage/Blog.jsx'
 import Register from './pages/RegisterPage/Register.jsx'
 import Login from './pages/loginPage/Login.jsx'
 import OTPPage from './pages/otpPage/Otp.jsx'
+import About from './pages/aboutPage/About.jsx'
+import SingleBlog from './pages/singleBlog/SingleBlog.jsx'
+import Profile from './pages/profilePage/Profile.jsx'
 
 
 // creating routes navigator
@@ -23,6 +26,9 @@ const router = createBrowserRouter(
       <Route path='/login' element={<Login/>}></Route>
       <Route path='/register' element={<Register/>}></Route>
       <Route path='/otp' element={<OTPPage/>}></Route>
+      <Route path='/about' element={<About/>}></Route>
+      <Route path='/blogsigle' element={<SingleBlog/>}></Route>
+      <Route path='/profile' element={<Profile/>}></Route>
     </Route>
   )
 )

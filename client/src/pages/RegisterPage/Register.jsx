@@ -1,9 +1,14 @@
-import { useState } from "react";
-import axios from "axios";
+import axios from 'axios';
+import { Link } from "react-router-dom";
 import "./register.css";
-import { Navigate } from "react-router-dom";
+import { useState } from "react";
+import {useDispatch} from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import {addToken} from '../../features/blogs/tokenSlice';
 
-function Register() {
+export default function Register() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,58 +27,73 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     const userData = {
-      fullName: fullName,
-      email: email,
-      password: password,
+      fullName,
+      email,
+      password,
     };
 
+
     if (userData) {
-      await axios.post("http://localhost:8000/api/v1/user/register", userData);
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/user/register",
+        userData
+      );
+
+      if (response.data.success) {
+        dispatch(addToken(response.data.activationToken));
+        navigate("/otp", { replace: true });
+      }
       setFullName("");
       setEmail("");
       setPassword("");
-      Navigate("/otp", { replace: true });
     } else {
       console.log("all filed are required");
     }
   };
 
   return (
-    <div className="register-container">
-      <form onSubmit={handleSubmit} className="register-form">
-        <h2>Register</h2>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Enter full name"
-            value={fullName}
-            onChange={handleFullNameChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <button type="submit">Register</button>
+    <div className="register">
+      <span className="registerTitle">Register</span>
+      <form onSubmit={handleSubmit} className="registerForm">
+        <label>Full Name</label>
+        <input
+          className="registerInput"
+          type="text"
+          placeholder="Enter your fullname..."
+          value={fullName}
+          onChange={handleFullNameChange}
+          required
+        />
+        <label>Email</label>
+        <input
+          className="registerInput"
+          type="text"
+          placeholder="Enter your email..."
+          onChange={handleEmailChange}
+          value={email}
+          required
+        />
+        <label>Password</label>
+        <input
+          className="registerInput"
+          type="password"
+          placeholder="Enter your password..."
+          value={password}
+          onChange={handlePasswordChange}
+          required
+        />
+        <button type="submit" className="registerButton">
+          Register
+        </button>
+        <p className="register-link">
+          already have account{" "}
+          <Link to="/login" className="link-rg">
+            login
+          </Link>
+        </p>
       </form>
     </div>
   );
 }
-
-export default Register;

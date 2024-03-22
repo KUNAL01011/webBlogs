@@ -5,6 +5,25 @@ import {uploadOnCloudinary} from '../utils/cloudinary.js';
 import {asyncHandler} from '../utils/asyncHandler.js';
 import {v2 as cloudinary } from 'cloudinary';
 
+
+
+//This controller create for give all blogs to front-end
+const getBlogs = asyncHandler( async (req, res) => {
+    try {
+        const response = await Blog.find();
+        if(!response){
+          throw new ApiError(500, "we did't get response to backend");
+        }
+    
+        return res.status(200).json(
+          new ApiResponse(200, response,"Successfull fetched all data")
+        );
+      } catch (error) {
+        throw new ApiError(500,"Something went wrong while fetching all task");
+      }
+});
+
+
 //This controller create for adding a blog into the database
 const createBlog = asyncHandler( async (req,res) => {
     //fatching json data from body
@@ -49,39 +68,11 @@ const createBlog = asyncHandler( async (req,res) => {
     return res.status(201).json(
         new ApiResponse(201, createBlog, "blog created successfully")
     )
-})
-
-//This controller create for give all blogs to front-end
-const getBlogs = asyncHandler( async (req, res) => {
-    try {
-        const response = await Blog.find();
-        if(!response){
-          throw new ApiError(500, "we did't get response to backend");
-        }
-    
-        return res.status(200).json(
-          new ApiResponse(200, response,"Successfull fetched all data")
-        );
-      } catch (error) {
-        throw new ApiError(500,"Something went wrong while fetching all task");
-      }
-})
+});
 
 
-//This controller for delelting the blog 
-// const deleteBlog = asyncHandler( async (req, res) => {
-//     const taskId = req.params.id;
-//     if(!taskId) {
-//       return res.status(400).json({ message: "Missing required field: taskContent" });
-//     }
-//     try{
-//       const deleteblog = await Blog.findByIdAndDelete(taskId);
-//       res.status(200).json({ message: "Task successfully updated", data: deleteblog });
-      
-//     } catch(error){
-//       return res.status(500).json({ message: "Internal server error" });
-//     }
-// })
+
+
 const deleteBlog = asyncHandler(async (req, res) => {
   const taskId = req.params.id;
   if (!taskId) {
@@ -120,6 +111,8 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // This controller for updateing the blog 
 const updateBlog = asyncHandler( async (req, res) => {
 
-})
+});
+
+
 //exporting the controllers
 export {createBlog,getBlogs,deleteBlog};

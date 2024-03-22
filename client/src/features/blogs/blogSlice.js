@@ -58,5 +58,5 @@ export const blogSlice = createSlice({
   },
 });
 
-export const getData = (state) => state.blogs;
+export const getData = (state) => state.blog.blogs;
 export default blogSlice.reducer;

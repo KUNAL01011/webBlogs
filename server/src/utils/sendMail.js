@@ -1,13 +1,14 @@
 import nodemailer from "nodemailer";
 import ejs from "ejs";
 import path from "path";
-const sendMail = async (options) => {
+import { URL } from "url";
 
-
+const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
+    service: process.env.SMTP_SERVICE,
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || "587"),
-    service: process.env.SMTP_SERVICE,
+    secure: false,
     auth: {
       user: process.env.SMTP_MAIL,
       pass: process.env.SMTP_PASSWORD,
@@ -15,20 +16,27 @@ const sendMail = async (options) => {
   });
 
   const { email, subject, template, data } = options;
-//   const html = await ejs.renderFile(path.join(__dirname, '../mails/activation-mail.ejs'));
+  const __dirname = new URL(".", import.meta.url).pathname;
 
   const templatePath = path.join(__dirname, "../mails", template);
-  console.log(templatePath);
-  const html = await ejs.renderFile(templatePath, data);
 
-  const mailOptions = {
-    from: process.env.SMTP_MAIL,
-    to: email,
-    subject,
-    html,
-  };
+  try {
+    // Asynchronously render the email template
+    const html1 = await ejs.renderFile("D:/MERNPRACTICS/webBlogs/server/src/mails/activation-mail.ejs", data);
 
-  await transporter.sendMail(mailOptions);
+    const mailOptions = {
+      from: process.env.SMTP_MAIL,
+      to: email,
+      subject: subject, // Make sure you set the subject properly
+      html: html1,
+    };
+
+    const response = await transporter.sendMail(mailOptions);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
-export default sendMail;
+export default sendEmail;
