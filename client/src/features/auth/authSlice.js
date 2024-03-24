@@ -5,7 +5,6 @@ import { login, register, validation } from "./authApi";
 const initialState = {
   user: {},
   status: "",
-  mesg:''
 };
 
 // Requesting to fatch all data form backend using fatchAlltodo
@@ -35,7 +34,7 @@ export const validationAsync = createAsyncThunk(
 
 
 // creating a slice for adding objects in blogs array
-export const blogSlice = createSlice({
+export const authSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
@@ -73,5 +72,5 @@ export const blogSlice = createSlice({
   },
 });
 
-export const userData = (state) => state.blog.blogs;
-export default blogSlice.reducer;
+export const getUser = (state) => state.user.user;
+export default authSlice.reducer;

@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { Link } from "react-router-dom";
 import "./register.css";
 import { useState } from "react";
 import {useDispatch} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {addToken} from '../../features/blogs/tokenSlice';
+import { registerAsync } from '../../features/auth/authSlice';
+
 
 export default function Register() {
   const navigate = useNavigate();
@@ -35,22 +35,19 @@ export default function Register() {
     };
 
 
-    if (userData) {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
-        userData
-      );
+    if (!userData) {
+      console.log("all filed are required");
+      return;
+    } 
 
-      if (response.data.success) {
-        dispatch(addToken(response.data.activationToken));
-        navigate("/otp", { replace: true });
-      }
+    const res = await dispatch(registerAsync(userData));
+    if(res.meta.requestStatus === "fulfilled"){
       setFullName("");
       setEmail("");
       setPassword("");
-    } else {
-      console.log("all filed are required");
+      navigate('/otp')
     }
+    
   };
 
   return (

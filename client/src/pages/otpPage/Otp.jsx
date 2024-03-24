@@ -1,15 +1,16 @@
 import { useState } from "react";
 import "./otp.css";
-// import { useSelector } from "react-redux";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { validationAsync } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 function OTPPage() {
   const [firstDigit, setFirstDigit] = useState('');
   const [secondDigit, setSecondDigit] = useState('');
   const [thirdDigit, setThirdDigit] = useState('');
   const [fourthDigit, setFourthDigit] = useState('');
-  const [mesg , setMesg] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   
   const handleFirstDigit = (event) => {
     setFirstDigit(event.target.value);
@@ -29,25 +30,23 @@ function OTPPage() {
 
   
   const handleSubmit = async (event) => {
+    console.log(otp);
     event.preventDefault();
-    // You can handle OTP verification or further actions here
-    // console.log(token)
-    console.log(otp)
     const data = {
-      activation_Code: "",
-    };
-
-    if (otp) {
-      // data.activation_Token = token;
-      data.activation_Code = otp;
+      activation_Code: otp
     }
-
-    const response = await axios.post(
-      "http://localhost:8000/api/v1/user/activate_user",
-      data
-    );
-
-    setMesg(response.data);
+    if(!data){
+      console.log("we don't get otp");
+      return;
+    }
+    const res = await dispatch(validationAsync(data))
+    if(res.meta.requestStatus === "fulfilled"){
+      setFirstDigit("");
+      setSecondDigit("");
+      setThirdDigit("");
+      setFourthDigit('/otp')
+      navigate('/login')
+    }
   };
 
   return (
@@ -66,7 +65,6 @@ function OTPPage() {
         </p>
         <button onClick={handleSubmit}>Verify</button>
       </div>
-      <p>{mesg &&<span>{mesg} <Link to = "/login"> login </Link></span>}</p>
     </div>
   );
 }

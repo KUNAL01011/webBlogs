@@ -1,13 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../../features/auth/authSlice";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -21,22 +22,22 @@ export default function Login() {
     event.preventDefault();
     const userData = {
       email: email,
-      password: password
+      password: password,
     };
 
     try {
-      if(!userData){
+      if (!userData) {
         console.log("data is not get");
       }
 
-      const response = await dispatch(loginAsync(userData));
-
-      console.log(response);
-      
-    }catch(error){
+      const res = await dispatch(loginAsync(userData));
+      if(res.meta.requestStatus === "fulfilled"){
+        navigate('/')
+      }
+    } catch (error) {
       console.log(error);
     }
-     // For demonstration, you can replace this with your API call
+    // For demonstration, you can replace this with your API call
   };
 
   return (
@@ -61,7 +62,9 @@ export default function Login() {
           onChange={handlePasswordChange}
           required
         />
-        <button type="submit" className="loginButton">Login</button>
+        <button type="submit" className="loginButton">
+          Login
+        </button>
         <p className="register-link">
           Do not have account{" "}
           <Link to="/register" className="link-rg">

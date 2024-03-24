@@ -12,7 +12,7 @@ router.route("/getAllBlog").get(getBlogs);
 
 
 //secure routes
-router.use(verifyJWT);// apply verification to all routes
+// router.use(verifyJWT);// apply verification to all routes
 
 router.route("/add-blog").post(
   upload.fields([
