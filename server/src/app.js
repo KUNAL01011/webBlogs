@@ -3,10 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import ejs from "ejs";
 
-
-
 const app = express();
-
 
 // middlewares that can allow me to do something
 app.use(cors({
@@ -24,6 +21,7 @@ app.engine("ejs", ejs.renderFile)
 //routes import
 import blogRouter from "./routes/blog.route.js";
 import userRouter from "./routes/user.route.js";
+
 
 //routes declaration
 app.use("/api/v1/blog", blogRouter);

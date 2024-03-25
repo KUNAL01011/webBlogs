@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import "./about.css";
 
+
 const About = () => {
+
   return (
     <div className="about">
-      <div className="aboutContainer">
+       <div className="aboutContainer">
         <h1 className="heading1">About Us</h1>
         <p className="subtitle">
         🚀 Digital Dreamweaver: Kunal Kumal, BCA student & full-stack aficionado, embarks on a coding odyssey. Join me in unraveling the tech magic on my blogging escapade! 💻✨

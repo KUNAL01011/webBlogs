@@ -1,55 +1,25 @@
 import { NavLink } from "react-router-dom";
-// import "./header.css";
-// import { useState } from "react";
-
-// //header component for all pages
-// const Header = () => {
-//   const [isLogin, setIsLogin] = useState(true);
-//   return (
-//     <div className="header">
-//       <div className="left">
-//         <span className="logo-text">WebBlog's</span>
-//       </div>
-//       <div className="right">
-//         <NavLink
-//           to="/"
-//           className={({ isActive }) => `${isActive ? "col" : "black"} `}
-//         >
-//           <span className="route">Home</span>
-//         </NavLink>
-//         <NavLink
-//           to="/create-blog"
-//           className={({ isActive }) => `${isActive ? "col" : "black"} `}
-//         >
-//           <span className="route">About</span>
-//         </NavLink>
-//         <NavLink
-//           to="/create-blog"
-//           className={({ isActive }) => `${isActive ? "col" : "black"} `}
-//         >
-//           <button className="route lg-btn">Register</button>
-//         </NavLink>
-//         <NavLink
-//           to="/create-blog"
-//           className={({ isActive }) => `${isActive ? "col" : "black"} `}
-//         >
-//           <button className="route lg-btn">Login</button>
-//         </NavLink>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Header;
-
 import { Link } from "react-router-dom";
 import "./header.css";
 import Sidebar from "../sidebar/Sidebar";
 import { useState } from "react";
+import {useSelector} from 'react-redux'
+// import data from "../../../data";
+
+
 
 export default function Header() {
+
   const [sidebar, setSidebar] = useState(false);
-  const user = false;
+
+  const user = useSelector((state) => state.user.user);
+ 
+  // const user = data.user;
+
+
+
+
+  // const user = true;
   return (
     <div className="top">
       <div className="topLeft">
@@ -65,22 +35,26 @@ export default function Header() {
               HOME
             </NavLink>
           </li>
-          <li className="topListItem">
-            <NavLink
-              className={({ isActive }) => `${isActive ? "col" : "black"} `}
-              to="/about"
-            >
-              ABOUT
-            </NavLink>
-          </li>
-          <li className="topListItem">
-            <NavLink
-              className={({ isActive }) => `${isActive ? "col" : "black"} `}
-              to="/create-blog"
-            >
-              WRITE
-            </NavLink>
-          </li>
+          {user ? (
+            <li className="topListItem">
+              <NavLink
+                className={({ isActive }) => `${isActive ? "col" : "black"} `}
+                to="/about"
+              >
+                ABOUT
+              </NavLink>
+            </li>
+          ) : ""}
+          {user ? (
+            <li className="topListItem">
+              <NavLink
+                className={({ isActive }) => `${isActive ? "col" : "black"} `}
+                to="/create-blog"
+              >
+                WRITE
+              </NavLink>
+            </li>
+          ) : ""}
         </ul>
       </div>
       <div className="topRight">
@@ -88,7 +62,7 @@ export default function Header() {
           <Link className="link" to="/profile">
             <img
               className="topImg"
-              src="https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+              src={user.avatar}
               alt=""
             />
           </Link>
@@ -109,7 +83,7 @@ export default function Header() {
       </div>
       <div className="customMenu" onClick={() => setSidebar(!sidebar)}>
         <i className="fa-solid fa-bars"></i>
-        {sidebar ? <Sidebar/> : ""}
+        {sidebar ? <Sidebar /> : ""}
       </div>
     </div>
   );

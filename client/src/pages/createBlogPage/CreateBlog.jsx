@@ -1,15 +1,19 @@
 import { useState } from "react";
 import ReactQuill from "react-quill";
-import axios from "axios";
 import "./createBlog.css";
 import "react-quill/dist/quill.snow.css"; // Include CSS for rich text editor
+import {useDispatch, useSelector} from 'react-redux'
+import { createBlogAsync } from "../../features/blogs/blogSlice";
 
 const CreateBlog = () => {
+  const user = useSelector((state)=> state.user.user.user);
+  const validation = true;
   const [title, setTitle] = useState(""); // title of blog
   const [summary, setSummary] = useState(""); // summary of blog
   const [mainImage, setMainImage] = useState(null); // main Image of blog
   const [content, setContent] = useState(""); // Initialize content as an empty string
   const [conclusion, setConclusion] = useState(""); // set the conclusion of blog
+  const dispatch = useDispatch();
 
   // set the data into set State
   const handleChange = (event) => {
@@ -35,8 +39,9 @@ const CreateBlog = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      if (!title && !summary && !mainImage && !content && !conclusion) {
+      if (!title && !summary && !mainImage && !content && !conclusion && !user) {
         console.log("We don't get data here ");
+        return;
       }
       const formData = new FormData();
       formData.append("title", title);
@@ -44,24 +49,19 @@ const CreateBlog = () => {
       formData.append("content", content);
       formData.append("conclusion", conclusion);
       formData.append("mainImage", mainImage); // Assuming mainImage is a File object
+      formData.append("user",user);
 
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/blog/add-blog",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      
-      if (response.status === 201 || response.data.success) {
+
+      const res = await dispatch(createBlogAsync(formData));
+
+     
+
+      if (res.meta.requestStatus === "fulfilled") {
         setTitle("");
         setSummary("");
         setMainImage(null);
         setContent("");
         setConclusion("");
-        // document.getElementById("mainImage").value = "";
       }
     } catch (error) {
       console.error("Error adding Blog:", error);
@@ -91,57 +91,61 @@ const CreateBlog = () => {
   return (
     <div className="blog-form">
       <h1 className="heading">Create Blog Post</h1>
-      <form onSubmit={(e) => handleSubmit(e)} className="form">
-        <label htmlFor="title">Title:</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          value={title}
-          onChange={handleChange}
-          required
-        />
-        <label htmlFor="summary">Summary:</label>
-        <textarea
-          id="summary"
-          name="summary"
-          value={summary}
-          onChange={handleChange}
-          required
-        />
-        <label htmlFor="mainImage">Main Image:</label>
-        <input
-          type="file"
-          id="mainImage"
-          name="mainImage"
-          accept="image/*"
-          onChange={handleChange}
-        />
-        <div id="editor">
-          <label className="bg-transprent" htmlFor="content">
-            Content:
-          </label>
-          <ReactQuill
-            modules={modules}
-            formats={formats}
-            theme="snow"
-            value={content}
-            onChange={handleContentChange}
+      {!validation ? (
+        <h1>Sorry you need to login first </h1>
+      ) : (
+        <form onSubmit={(e) => handleSubmit(e)} className="form">
+          <label htmlFor="title">Title:</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={title}
+            onChange={handleChange}
+            required
           />
-        </div>
-        <label htmlFor="conclusion">Conclusion:</label>
-        <textarea
-          id="conclusion"
-          name="conclusion"
-          value={conclusion}
-          onChange={handleChange}
-        />
-        <div className="btn-wrapper">
-          <button type="submit" className="btn">
-            Upload
-          </button>
-        </div>
-      </form>
+          <label htmlFor="summary">Summary:</label>
+          <textarea
+            id="summary"
+            name="summary"
+            value={summary}
+            onChange={handleChange}
+            required
+          />
+          <label htmlFor="mainImage">Main Image:</label>
+          <input
+            type="file"
+            id="mainImage"
+            name="mainImage"
+            accept="image/*"
+            onChange={handleChange}
+          />
+          <div id="editor">
+            <label className="bg-transprent" htmlFor="content">
+              Content:
+            </label>
+            <ReactQuill
+              modules={modules}
+              formats={formats}
+              theme="snow"
+              value={content}
+              onChange={handleContentChange}
+            />
+          </div>
+          <label htmlFor="conclusion">Conclusion:</label>
+          <textarea
+            id="conclusion"
+            name="conclusion"
+            value={conclusion}
+            onChange={handleChange}
+          />
+          <div className="btn-wrapper">
+            <button type="submit" className="btn">
+              Upload
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };

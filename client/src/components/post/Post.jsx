@@ -1,41 +1,38 @@
 import { Link } from "react-router-dom";
 import "./post.css";
+import data from "../../../data";
 
-export default function Post({img}) {
+export default function Post({ blog }) {
+  // console.log(blog.createdAt)
+  const createdAt = new Date(blog.createdAt).toISOString().split("T")[0];
+  const user = data.user;
   return (
     <div className="post">
-      <img
-        className="postImg"
-        src={img}
-        alt=""
-      />
-      <div className="postInfo">
-        <div className="postCats">
-          <span className="postCat">
-            <Link className="link" to="/posts?cat=Music">
-              Music
-            </Link>
-          </span>
-          <span className="postCat">
-            <Link className="link" to="/posts?cat=Music">
-              Life
-            </Link>
-          </span>
+      <img className="postImg" src={blog.mainImage} alt="" />
+      <div className="video-bottom-section">
+        <a href="#">
+          <img className="channel-icon" src={user.avatar} alt="" />
+        </a>
+        <div className="video-details">
+          <a href="#" className="video-title">
+           {user.fullName}
+          </a>
+          <div className="video-metadata">
+            <span>{createdAt}</span>
+          </div>
         </div>
+      </div>
+      <div className="postInfo">
         <span className="postTitle">
           <Link to="/post/abc" className="link">
-            Lorem ipsum dolor sit amet
+            {blog.title}
           </Link>
         </span>
         <hr />
-        <span className="postDate">1 hour ago</span>
       </div>
-      <p className="postDesc">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda
-        officia architecto deserunt deleniti? Labore ipsum aspernatur magnam
-        fugiat, reprehenderit praesentium blanditiis quos cupiditate ratione
-        atque, exercitationem quibusdam, reiciendis odio laboriosam?
-      </p>
+      <p className="postDesc">{blog.summary}</p>
+
+      
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import {Blog} from '../models/blog.model.js';
+import {User} from '../models/user.model.js';
 import {ApiError} from '../utils/ApiError.js';
 import {ApiResponse} from '../utils/ApiResponse.js';
 import {uploadOnCloudinary} from '../utils/cloudinary.js';
@@ -48,27 +49,40 @@ const createBlog = asyncHandler( async (req,res) => {
     }
 
     //create an entry in database
+    // console.log(req.user)
     const blog = await Blog.create({
         title,
         mainImage: mainImage.url,
         summary,
         content,
         conclusion,
-        imageCloudId: mainImage.public_id
+        imageCloudId: mainImage.public_id,
+        owner:req.user._id
     });
 
     //checking entry created or not
-    const createdBlog = await Blog.findById(blog._id);
+    console.log("blog : ", blog[_id]);
+    // const createdBlog = await Blog.findById();
+
 
     if(!createdBlog){
         throw new ApiError(500, "Somthing went wrong while creating blog");
     }
+
+    const createdByUser = await User.findById(createBlog.owner);
+    // console.log(createdByUser);
+
+    // createdByUser.postsId = createBlog._id;
+    // await createdByUser.save({ validateBeforeSave: false });
 
     // return the response to frontend
     return res.status(201).json(
         new ApiResponse(201, createBlog, "blog created successfully")
     )
 });
+
+
+// new ObjectId('6601429445c9a9529bfce26e')
 
 
 
@@ -87,7 +101,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
       }
       
       // Delete the associated image from Cloudinary
-      console.log(blog.imageCloudId)
+    //   console.log(blog.imageCloudId)
       if (!blog.imageCloudId) {
           // Assuming you have the Cloudinary SDK installed and configured
           console.log("we can't find the id ");
@@ -107,11 +121,6 @@ const deleteBlog = asyncHandler(async (req, res) => {
   }
 });
 
-
-// This controller for updateing the blog 
-const updateBlog = asyncHandler( async (req, res) => {
-
-});
 
 
 //exporting the controllers

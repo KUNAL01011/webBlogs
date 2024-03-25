@@ -24,6 +24,7 @@ export async function validation(otp) {
   );
   if (!response) {
     console.error("we don't get data from this api");
+    return;
   }
   return response.data;
 }
@@ -39,6 +40,22 @@ export async function login(data) {
   );
   if (!response) {
     console.error("we don't get data from this api :");
+    return;
+  }
+  return response.data;
+}
+
+//fatching all blogs from the backend
+export async function getUser() {
+  const response = await axios.get(
+    "http://localhost:8000/api/v1/user/get-user",
+    {
+      withCredentials: true,
+    }
+  );
+  if (!response) {
+    console.error("we don't get data from this api :");
+    return;
   }
   return response.data;
 }

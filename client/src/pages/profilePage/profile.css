@@ -12,18 +12,38 @@
   border-radius: 2rem;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
   top: 20rem;
-  right: 50rem;
+  right: 0;
+  left: 0;
 }
 
 .content__avatar {
   position: relative;
 }
 
+.logo_wrapper {
+  width: 20rem;
+  height: 20rem;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  border: 2px solid black;
+  position: absolute;
+  top: -118px;
+  right: 234px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.6);
+  display: none;
+}
+.logo_wrapper:hover{
+  display: flex;
+}
 .profileImg {
   position: absolute;
   top: -170px;
   right: 200px;
   width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
 
 }
 
@@ -54,18 +74,12 @@
 
 
 .editButton {
-  position: absolute;
-  top: -116px;
-  right: 254px;
-  z-index: 90;
-  border: 1px solid black;
-  padding: 1rem;
-  border-radius: 50%;
-  
+  font-size: 1.5rem;
 }
 
 .cardImage {
   width: 17rem;
+  height: 17rem;
 }
 
 .title {
@@ -81,6 +95,7 @@
   margin-top: 40rem;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 3rem;
 }
 

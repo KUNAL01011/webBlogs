@@ -22,7 +22,10 @@ const sendEmail = async (options) => {
 
   try {
     // Asynchronously render the email template
-    const html1 = await ejs.renderFile("D:/MERNPRACTICS/webBlogs/server/src/mails/activation-mail.ejs", data);
+    const html1 = await ejs.renderFile(
+      "D:/MERNPRACTICS/webBlogs/server/src/mails/activation-mail.ejs",
+      data
+    );
 
     const mailOptions = {
       from: process.env.SMTP_MAIL,

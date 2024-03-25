@@ -89,10 +89,13 @@ const registerUser = asyncHandler(async (req, res) => {
       res
         .status(200)
         .cookie("activationToken", activationToken, options)
-        .json({
-          success: true,
-          message: `Please check your email: ${user.email} to activate your account`,
-        });
+        .json(
+          new ApiResponse(
+            200,
+            "Activate User Successfully",
+            `Please check your email: ${user.email} to activate your account`
+          )
+        );
 
       return;
     } catch (error) {
@@ -107,7 +110,6 @@ const activateUser = asyncHandler(async (req, res) => {
   try {
     // Extract activation code from the request body
     const { activation_Code } = req.body;
-
 
     // Extract token from the cookie in the request headers
     const activation_Token = req.cookies.activationToken;
@@ -223,4 +225,10 @@ const loginUser = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser, activateUser, loginUser };
+const getUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "user logged in successfully"));
+});
+
+export { registerUser, activateUser, loginUser, getUser };

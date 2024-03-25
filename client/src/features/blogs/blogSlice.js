@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteBlog, getAllBlogs } from "./blogApi";
+import { deleteBlog, getAllBlogs,createBlog } from "./blogApi";
 
 //That is the initial state of your data;
 const initialState = {
@@ -24,6 +24,14 @@ export const deleteBlogAsync = createAsyncThunk(
   }
 );
 
+export const createBlogAsync = createAsyncThunk(
+  "blogs/createBlog",
+  async (data) => {
+    const response = await createBlog(data);
+    return response.data;
+  }
+);
+
 // creating a slice for adding objects in blogs array
 export const blogSlice = createSlice({
   name: "blog",
@@ -40,6 +48,16 @@ export const blogSlice = createSlice({
       .addCase(getAllBlogsAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.blogs = action.payload;
+      })
+      .addCase(createBlogAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createBlogAsync.rejected, (state) => {
+        state.status = "reject";
+      })
+      .addCase(createBlogAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.blogs = [...state.blogs, ...action.payload];
       })
       .addCase(deleteBlogAsync.pending, (state) => {
         state.status = "loading";
