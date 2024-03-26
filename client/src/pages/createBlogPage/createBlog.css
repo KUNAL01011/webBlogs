@@ -2,7 +2,7 @@
     width: 80%;
     margin: auto;
     padding-top: 4rem;
-    margin-top: 8rem;
+    margin-top: 4rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -24,18 +24,18 @@
     border-radius: 1rem;
     gap: 2rem;
     font-size: 1.5rem;
-    box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44);
+    /* box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44); */
     margin-bottom: 30rem;
 }
 
 #title {
-    height: 2rem;
+    height: 3rem;
     padding: 0px 1rem;
     background-color: #efe3e3;
     border: none;
     outline: none;
     border-radius: 0.5rem;
-    box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44);
+    /* box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44); */
 }
 #summary {
     height: 8rem;
@@ -44,7 +44,7 @@
     border: none;
     outline: none;
     border-radius: 0.5rem;
-    box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44);
+    /* box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44); */
 }
 #editor {
     padding: 1rem 1rem;
@@ -52,7 +52,7 @@
     border: none;
     outline: none;
     border-radius: 0.5rem;
-    box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44);
+    /* box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44); */
 }
 .bg-transprent{
     background-color: transparent;
@@ -60,13 +60,13 @@
 }
 
 #conclusion {
-    height: 3rem;
+    height: 4rem;
     padding: 1rem 1rem;
     background-color: #efe3e3;
     border: none;
     outline: none;
     border-radius: 0.5rem;
-    box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44);
+    /* box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44); */
 }
 .btn-wrapper {
     display: flex;
@@ -82,5 +82,11 @@
     border: none;
     outline: none;
     border-radius: 0.5rem;
-    box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44);
+    /* box-shadow: 10px 10px 28px 4px rgba(0,0,0,0.44); */
+}
+
+@media only screen and (max-width: 431px) {
+    .form {
+        padding: 1rem;
+    }
 }

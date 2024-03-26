@@ -1,4 +1,5 @@
 .profileCard {
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 800px;
@@ -34,7 +35,7 @@
   background-color: rgba(255, 255, 255, 0.6);
   display: none;
 }
-.logo_wrapper:hover{
+.logo_wrapper:hover {
   display: flex;
 }
 .profileImg {
@@ -44,7 +45,6 @@
   width: 20rem;
   height: 20rem;
   border-radius: 50%;
-
 }
 
 .content__title {
@@ -63,7 +63,7 @@
   flex-direction: column;
   max-width: 20rem;
   width: 100%;
-  /* position: absolute; */
+  position: relative;
   z-index: 2;
   margin: auto;
   padding: 2rem;
@@ -71,7 +71,6 @@
   border-radius: 2rem;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
 }
-
 
 .editButton {
   font-size: 1.5rem;
@@ -107,4 +106,80 @@
 .DetailEditButton {
   font-size: 1.2rem;
   text-align: end;
+}
+
+@media only screen and (max-width: 431px) {
+  .profileCard {
+    position: relative;
+    width: 85%;
+    height: 27rem;
+    top: -11rem;
+    right: 0;
+    left: 0;
+  }
+  .totalPost {
+    margin-top: 0rem;
+  }
+  .profileImg {
+    top: -134px;
+    left: 52px;
+    width: 11rem;
+    height: 11rem;
+    right: 0;
+  }
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+
+  .content__title {
+    margin-top: 5rem;
+  }
+}
+
+.iconsEdit {
+  position: absolute;
+  background-color: #d3d3d3;
+  width: 45px;
+  height: 45px;
+  border: 1px solid;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.iconsEditt {
+  position: absolute;
+  background-color: #d3d3d3;
+  width: 45px;
+  height: 45px;
+  border: 1px solid;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  left: 30rem;
+  top: -8rem;
+}
+
+.iconsDelete {
+  position: absolute;
+  background-color: #d3d3d3;
+  width: 45px;
+  height: 45px;
+  border: 1px solid;
+  border-radius: 50%;
+  left: 16rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media only screen and (max-width: 431px) {
+  .iconsEditt {
+    left: 11rem;
+    top: -8rem;
+  }
 }

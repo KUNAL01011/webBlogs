@@ -10,17 +10,25 @@ import {useSelector} from 'react-redux'
 
 export default function Header() {
 
-  const [sidebar, setSidebar] = useState(false);
+  const [sidebar, setSidebar] = useState("hidden");
 
   const user = useSelector((state) => state.user.user);
  
   // const user = data.user;
-
+  function handler() {
+    if(sidebar === 'hidden'){
+      setSidebar("");
+    }
+    else{
+      setSidebar("hidden");
+    }
+  }
 
 
 
   // const user = true;
   return (
+    <>
     <div className="top">
       <div className="topLeft">
         <img src="./logoMain.png" alt="" />
@@ -81,10 +89,13 @@ export default function Header() {
           </ul>
         )}
       </div>
-      <div className="customMenu" onClick={() => setSidebar(!sidebar)}>
+      <div className="customMenu" onClick={handler}>
         <i className="fa-solid fa-bars"></i>
-        {sidebar ? <Sidebar /> : ""}
       </div>
     </div>
+    <div className={`${sidebar} hid`}>
+       <Sidebar />
+    </div>
+    </>
   );
 }

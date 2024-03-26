@@ -4,9 +4,11 @@
   
   .headerTitles {
     display: flex;
+    
     flex-direction: column;
     align-items: center;
     font-family: "Lora", serif;
+    position: relative;
     color: #444;
   
   }
@@ -14,13 +16,16 @@
   .headerTitleSm {
     position: absolute;
     top: 18%;
+    padding-top: 8rem;
     font-size: 1.25rem;
     z-index: 2;
   }
   
   .headerTitleLg {
+
     position: absolute;
     top: 20%;
+    padding-top: 10rem;
     font-size: 6.25rem;
     z-index: 2;
   }
@@ -32,4 +37,33 @@
     object-fit: cover;
     filter: blur(4px);
    
+  }
+
+
+  @media only screen and (max-width: 1024px) {
+    
+  }
+  @media only screen and (max-width: 768px) {
+    .headerTitleLg {
+      top: 30%;
+      font-size: 4rem;
+    }
+  }
+  @media only screen and (max-width: 431px) {
+    .headerTitleLg {
+      top: 20%;
+      font-size: 1.8rem;
+    }
+    .headerTitleSm {
+      position: absolute;
+      top: 15%;
+      font-size: 1.25rem;
+      z-index: 2;
+    }
+    .headerImg {
+      height: 23rem;
+    }
+  }
+  @media only screen and (max-width: 325px) {
+    
   }

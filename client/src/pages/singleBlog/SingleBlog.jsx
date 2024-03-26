@@ -27,7 +27,7 @@ const SingleBlog = () => {
           </div>
         </div>
         <div className="mainImage">
-          <img src={blog.mainImage} alt="" />
+          <img className="mainImag" src={blog.mainImage} alt="" />
         </div>
 
         <div className="content">
