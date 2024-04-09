@@ -1,9 +1,0 @@
-.posts{
-    width: 80%;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 8rem 0;
-    justify-content: space-around;
-    /* justify-content: space-between; */
-    margin: auto;
-}

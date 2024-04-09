@@ -1,31 +1,20 @@
 import { Router } from "express";
-import {
-  createBlog,
-  getBlogs,
-  deleteBlog,
-} from "../controllers/blog.controller.js";
-import { upload } from "../middlewares/multer.middleware.js";
+import { deleteBlog, getAllBlogs, publishABlog, updateBlog,togglePublishStatus } from '../controllers/blog.controller.js';
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
-//creating router using Router() of express js
 const router = Router();
 
 
+router.route("/").get(getAllBlogs);
 
-router.route("/get-blogs").get(getBlogs);
+router.use(verifyJWT);
+router.route('/create-blog').post(upload.single("mainImage"),publishABlog);
 
-//secure routes
-router.route("/create-blog").post(
-  verifyJWT,
-  upload.fields([
-    {
-      name: "mainImage",
-      maxCount: 1,
-    },
-  ]),
-  createBlog
-);
-router.route("/delete-blog/:id").delete(verifyJWT, deleteBlog);
+router.route('/:blogId').delete(deleteBlog);
+router.route('/:blogId').patch(upload.single('mainImage'),updateBlog);
+router.route('/toggle/publish/:blogId').patch(togglePublishStatus);
 
+// router.route('/:blogId').get(getBlogById);
 
 export default router;

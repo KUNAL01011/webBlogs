@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteBlog, getAllBlogs,createBlog } from "./blogApi";
+import { deleteBlog, getAllBlogs,createBlog, getBlogById } from "./blogApi";
 
 //That is the initial state of your data;
 const initialState = {
   blogs: [],
+  singleBlog:{},
   status: "",
 };
 
@@ -12,6 +13,13 @@ export const getAllBlogsAsync = createAsyncThunk(
   "blogs/getAllBlogs",
   async () => {
     const response = await getAllBlogs();
+    return response.data;
+  }
+);
+export const getBlogByIdAsync = createAsyncThunk(
+  "blog/getBlogById",
+  async () => {
+    const response = await getBlogById();
     return response.data;
   }
 );
@@ -48,6 +56,16 @@ export const blogSlice = createSlice({
       .addCase(getAllBlogsAsync.fulfilled, (state, action) => {
         state.status = "idle";
         state.blogs = action.payload;
+      })
+      .addCase(getBlogByIdAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getBlogByIdAsync.rejected, (state) => {
+        state.status = "reject";
+      })
+      .addCase(getBlogByIdAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.singleBlog = action.payload;
       })
       .addCase(createBlogAsync.pending, (state) => {
         state.status = "loading";

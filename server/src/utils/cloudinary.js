@@ -16,8 +16,10 @@ const uploadOnCloudinary = async (localFilePath) => {
       resource_type: "auto",
     });
 
+
     fs.unlinkSync(localFilePath);
     return response;
+
   } catch (error) {
     fs.unlinkSync(localFilePath); //remove the locally sevad temparray file as the upload operation got faild
     return null;

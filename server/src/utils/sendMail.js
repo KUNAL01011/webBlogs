@@ -30,7 +30,7 @@ const sendEmail = async (options) => {
     const mailOptions = {
       from: process.env.SMTP_MAIL,
       to: email,
-      subject: subject, // Make sure you set the subject properly
+      subject: subject,
       html: html1,
     };
 

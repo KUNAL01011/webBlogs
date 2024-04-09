@@ -1,10 +1,19 @@
-* {
-  margin: 0px;
-  padding: 0px;
-  font-family: "Roboto", sans-serif;
-  box-sizing: border-box;
-}
-a {
-  text-decoration: none;
-  list-style: none;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .customs>* {
+        @apply mt-4 mb-4;
+    }
+
+    .customs h2,
+    .customs h3,
+    .customs h4 {
+        @apply text-xl;
+    }
+    .bg-blur {
+        background-filter: "blur(2px)";
+    }
 }

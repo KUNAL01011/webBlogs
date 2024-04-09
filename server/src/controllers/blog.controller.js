@@ -1,127 +1,213 @@
-import {Blog} from '../models/blog.model.js';
-import {User} from '../models/user.model.js';
-import {ApiError} from '../utils/ApiError.js';
-import {ApiResponse} from '../utils/ApiResponse.js';
-import {uploadOnCloudinary} from '../utils/cloudinary.js';
-import {asyncHandler} from '../utils/asyncHandler.js';
-import {v2 as cloudinary } from 'cloudinary';
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { Blog } from "../models/blog.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
+import { upload } from "../middlewares/multer.middleware.js";
 
+//This controller for getting all blogs : working fine : need some updation
+const getAllBlogs = asyncHandler(async (req, res) => {
+  try {
+    const blogs = await Blog.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          subtitle: 1,
+          mainImage: 1,
+          content: 1,
+          conclusion: 1,
+          isPublished: 1,
+          tags: 1,
+          category: 1,
+          owner: {
+            $arrayElemAt: ["$owner", 0],
+          },
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
 
-
-//This controller create for give all blogs to front-end
-const getBlogs = asyncHandler( async (req, res) => {
-    try {
-        const response = await Blog.find();
-        if(!response){
-          throw new ApiError(500, "we did't get response to backend");
-        }
-    
-        return res.status(200).json(
-          new ApiResponse(200, response,"Successfull fetched all data")
-        );
-      } catch (error) {
-        throw new ApiError(500,"Something went wrong while fetching all task");
-      }
+    res.status(200).json(new ApiResponse(200, blogs, "all blogs are fetched"));
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong", error);
+  }
 });
 
+//update the blog : this has a problem : working fine
+const updateBlog = asyncHandler(async (req, res) => {
+  const { blogId } = req.params; // Get the blog id from request parameters
+  const updatedData = req.body; // Get updated blog data from request body
+  const newMainImage = req.file?.path;
+  const user = req.user;
 
-//This controller create for adding a blog into the database
-const createBlog = asyncHandler( async (req,res) => {
-    //fatching json data from body
-    const {title,summary,content,conclusion} = req.body;
 
-    if([title,summary,content,conclusion].some((field) => field.trim() === "")){
-        throw new ApiError(400, "All fields are required")
-    }
+  const blog = await Blog.findById(blogId);
+  const oldMainImageCloudId = blog.mainImageCloudId;
 
-    //fatcing file form the req
-    const mainImagePath = req.files?.mainImage[0]?.path;
-    if(!mainImagePath) {
-        throw new ApiError(400,"main Image is required");
-    }
+  console.log(updatedData.title)
+  
+  const response = {};
+  if(newMainImage){
+    response = await uploadOnCloudinary(newMainImage);
+  }
 
-    //Image upload on cloudinary 
-    const mainImage = await uploadOnCloudinary(mainImagePath);
-    // console.log(mainImage);
 
-    if(!mainImage){
-        throw new ApiError(400, "main Image is required");
-    }
+  const userId = user._id;
+  const Id = blog.owner;
+  if (userId.toString() !== Id.toString()) {
+    throw new ApiError(400, "Anouthrized request");
+  }
 
-    //create an entry in database
-    // console.log(req.user)
-    const blog = await Blog.create({
-        title,
-        mainImage: mainImage.url,
-        summary,
-        content,
-        conclusion,
-        imageCloudId: mainImage.public_id,
-        owner:req.user._id
+  console.log(Id);
+
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(blogId,{
+      $set:{
+        title: updatedData?.title,
+        subtitle:updatedData?.subtitle,
+        mainImage: res?.url,
+        mainImageCloudId: res?.public_id,
+        content:updatedData?.content,
+        conclusion:updatedData?.conclusion,
+        tags: updatedData?.tags,
+        category:updatedData?.category
+      }
+    }, {
+      new: true,
     });
 
-    //checking entry created or not
-    console.log("blog : ", blog[_id]);
-    // const createdBlog = await Blog.findById();
+    console.log(updateBlog)
 
+    if (!updatedBlog) {
+      throw new ApiError(400, "we can not find the blog");
+    }
+    if (newMainImage) {
+      await cloudinary.uploader.destroy(oldMainImageCloudId,{
+        resource_type: "auto"
+      });
+    }
+    res
+      .status(200)
+      .json(new ApiResponse(200, updateBlog, "update blog successfully"));
+  } catch (error) {
+    console.error("Error updating blog:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
-    if(!createdBlog){
-        throw new ApiError(500, "Somthing went wrong while creating blog");
+//delete the blog : wroking fine
+const deleteBlog = asyncHandler(async (req, res) => {
+  try {
+    const { blogId } = req.params;
+
+    console.log(blogId);
+
+    const blog = await Blog.findById(blogId);
+    console.log(blog);
+    const mainImageCloudId = blog.mainImageCloudId;
+    if (mainImageCloudId) {
+      await cloudinary.uploader.destroy(mainImageCloudId);
     }
 
-    const createdByUser = await User.findById(createBlog.owner);
-    // console.log(createdByUser);
-
-    // createdByUser.postsId = createBlog._id;
-    // await createdByUser.save({ validateBeforeSave: false });
-
-    // return the response to frontend
-    return res.status(201).json(
-        new ApiResponse(201, createBlog, "blog created successfully")
-    )
-});
-
-
-// new ObjectId('6601429445c9a9529bfce26e')
-
-
-
-
-const deleteBlog = asyncHandler(async (req, res) => {
-  const taskId = req.params.id;
-  if (!taskId) {
-      return res.status(400).json({ message: "Missing required field: taskContent" });
-  }
-  try {
-      // Find the blog by ID
-      const blog = await Blog.findById(taskId);
-      
-      if (!blog) {
-          return res.status(404).json({ message: "Blog not found" });
-      }
-      
-      // Delete the associated image from Cloudinary
-    //   console.log(blog.imageCloudId)
-      if (!blog.imageCloudId) {
-          // Assuming you have the Cloudinary SDK installed and configured
-          console.log("we can't find the id ");
-      }
-      else{
-        await cloudinary.uploader.destroy(blog.imageCloudId);
-      }
-      
-      // Delete the blog from the database
-      const deletedBlog = await Blog.findByIdAndDelete(taskId);
-      
-      res.status(200).json({ message: "Blog successfully deleted", data: deletedBlog });
-
+    const deletedBlog = await Blog.findByIdAndDelete(blogId); // Renamed the variable to avoid conflict
+    if (!deleteBlog) {
+      throw new ApiError(400, "Your are not Anouthrized to delete the blog");
+    }
+    res
+      .status(200)
+      .json(new ApiResponse(200, deletedBlog, "Blog deleted successfully")); // Changed the variable name to deletedBlog
   } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
+    console.log(error);
+    throw new ApiError(400, "We were unable to delete the blog", error);
   }
 });
 
+// Controller function to create a new blog : working fine
+const publishABlog = asyncHandler(async (req, res) => {
+  const { title, subtitle, content, conclusion, tags, category } = req.body; // Get blog data from request body
+  const mainImageLocalPath = req.file?.path;
 
+  const user = req.user._id;
 
-//exporting the controllers
-export {createBlog,getBlogs,deleteBlog};
+  if (!mainImageLocalPath) {
+    throw new ApiError(400, "mainImage file is missing");
+  }
+
+  const mainImage = await uploadOnCloudinary(mainImageLocalPath);
+  // console.log(mainImage);
+
+  if (!mainImage.url) {
+    throw new ApiError(400, "Error while uploading on mainImage");
+  }
+
+  try {
+    const newBlog = await Blog.create({
+      title,
+      subtitle,
+      mainImage: mainImage.url,
+      mainImageCloudId: mainImage.public_id,
+      content,
+      conclusion,
+      tags,
+      category,
+      owner: user,
+    });
+    console.log(newBlog);
+
+    if (!newBlog) {
+      throw new ApiError(400, "error while generatign blog");
+    }
+
+    res
+      .status(200)
+      .json(200, new ApiResponse(200, newBlog, "Blog successfully created"));
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(400, "We can't create blog", error);
+  }
+});
+
+//togglePublishStatus of blog : working fine
+const togglePublishStatus = asyncHandler(async (req, res) => {
+  const { blogId } = req.params;
+
+  if (!blogId) {
+    throw new ApiError(400, "Sorry we can not find the blog");
+  }
+
+  try {
+    const blog = await Blog.findById(blogId);
+
+    if (!blog) {
+      throw new ApiError(400, "Sorry we can not find the blog");
+    }
+
+    blog.isPublished = true;
+    await blog.save({ validateBeforeSave: false });
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, blog, "publish blog successfully"));
+  } catch (error) {
+    throw new ApiError(200, "sorry we can not set publis your blog", error);
+  }
+});
+
+export {
+  getAllBlogs,
+  updateBlog,
+  deleteBlog,
+  publishABlog,
+  togglePublishStatus,
+};
